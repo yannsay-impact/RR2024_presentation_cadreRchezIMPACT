@@ -1,0 +1,36 @@
+add_weights             Add a weight variable using the sample frame
+analysistools_MSNA_template_choices
+                        MSNA template kobo choices (example)
+analysistools_MSNA_template_data
+                        MSNA template dataset (example)
+analysistools_MSNA_template_loa
+                        Example of list of analysis
+analysistools_MSNA_template_loa_with_ratio
+                        Example of list of analysis with ratio
+analysistools_MSNA_template_no_ratio_results_table
+                        Analysis results example (no ratio)
+analysistools_MSNA_template_survey
+                        MSNA template kobo survey (example)
+analysistools_MSNA_template_with_ratio_results_table
+                        Analysis results example (with ratio)
+check_loa               Helper to check the list of analysis format
+create_analysis         Create analysis from a design
+create_analysis_key_table
+                        Create a table from the analysis_key and
+                        results object
+create_analysis_mean    Calculate a mean from a survey
+create_analysis_median
+                        Calculate a median from a survey
+create_analysis_prop_select_multiple
+                        Calculate proportion from a survey design
+create_analysis_prop_select_one
+                        Calculate proportion from a survey
+create_analysis_ratio   Calculate a ratio from a survey
+create_loa              Create a list of analysis from design and a
+                        grouping variable
+create_loa_from_results
+                        Create a list of analysis from a results table
+review_analysis         Review columns comparing it to another set of
+                        columns and spots differences
+unite_variables         Unite variable from the key_table
+verify_analysis_key     Helper to check the format of the analysis key

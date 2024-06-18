@@ -1,0 +1,38 @@
+Package: addindicators
+Title: The addindicators Package Focuses on Adding Indicators to a
+        Dataset and Reviews the Added Indicator
+Version: 0.1.0
+Authors@R: c(
+    person("Mehedi", "Khan", , "mh.khan@reach-initiative.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4276-4485")),
+    person("Yann", "Say", , "yann.say@impact-initiatives.org", role = "aut",
+           comment = c(ORCID = "0000-0002-7390-4209"))
+  )
+Description: The addindicators package focuses on adding indicators such
+    as Food Consumption Score (FCS), Household Hunger Score(HHS) etc to a
+    dataset and reviews the added indicator.
+License: MIT + file LICENSE
+URL: https://impact-initiatives.github.io/addindicators/
+Depends: R (>= 3.5.0)
+Imports: dplyr, glue, magrittr, purrr, rlang, tidyr
+Suggests: testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.1
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: addindicators
+RemoteUsername: impact-initiatives
+RemoteRef: HEAD
+RemoteSha: 2335c6678f169d9ef84e3526955bc65fe9ac8a6b
+GithubRepo: addindicators
+GithubUsername: impact-initiatives
+GithubRef: HEAD
+GithubSHA1: 2335c6678f169d9ef84e3526955bc65fe9ac8a6b
+NeedsCompilation: no
+Packaged: 2024-05-14 06:59:18 UTC; Yann SAY
+Author: Mehedi Khan [aut, cre] (<https://orcid.org/0000-0002-4276-4485>),
+  Yann Say [aut] (<https://orcid.org/0000-0002-7390-4209>)
+Maintainer: Mehedi Khan <mh.khan@reach-initiative.org>
+Built: R 4.4.0; ; 2024-05-14 06:59:27 UTC; windows

@@ -1,0 +1,83 @@
+add_duration            Creates a duration variable using the start and
+                        end time of the survey
+add_duration_from_audit
+                        Adds duration from the audit file
+add_info_to_cleaning_log
+                        Add information to the cleaning log
+add_percentage_missing
+                        Adds the percentage of missing values per row
+auto_detect_sm_parents
+                        Detect select multiple parent columns
+auto_sm_parent_child    detect and group together select multiple
+                        parent and children columns
+check_duplicate         Checks for duplicated values in columns
+check_duration          Check if duration is outside of a range
+check_fcs               FCS component checks
+check_logical           Check a logical test
+check_logical_with_list
+                        Check several logical test
+check_others            Generate a log for other follow up questions
+check_others_checks     Check if the input passed to the check_others
+                        function is correct
+check_outliers          check outliers over the dataset
+check_percentage_missing
+                        Check the percentages of missing value
+check_pii               Checks for potential PII
+check_soft_duplicates   Checks for survey similarities - Soft
+                        Duplicates
+check_value             Check for value(s) in the dataset
+cleaningtools_analysis_by_group
+                        Analysis by population group
+cleaningtools_choices   Choices tab of kobo tool
+cleaningtools_clean_data
+                        Clean data
+cleaningtools_cleaning_log
+                        Cleaning log
+cleaningtools_food_consumption_df
+                        Dataset with food consumption, household hunger
+                        Score component
+cleaningtools_overall_analysis
+                        Nation/all population level analysis.
+cleaningtools_raw_data
+                        Raw data
+cleaningtools_sample_frame
+                        Sample frame
+cleaningtools_survey    Survey tab of kobo tool
+coerce_to_character     Coerce numeric values to character, without
+                        scientific noting and NA are kept as NA.
+create_audit_list       Read all audit files from a zip
+create_clean_data       implement cleaning log on raw data set.
+create_cleaning_log     Compares 2 dataset and logs differences
+create_cleaning_template
+                        Create a project folder with a cleaning
+                        template
+create_col_range        Generate excel range to be used for the data
+                        validation formula in excel
+create_combined_log     Merging the cleaning logs
+create_duration_from_audit_sum_all
+                        Calculate duration from audit summing all time
+create_duration_from_audit_with_start_end
+                        Calculate duration from audit between 2
+                        questions
+create_formated_wb      Creates formatted workbook with openxlsx
+create_formatted_choices
+                        Format and filter Choices for 'select_one'
+                        Questions
+create_logic_for_other
+                        Create logical checks for "other" values.
+create_validation_list
+                        Create a Validation List for Data Entry
+create_xlsx_cleaning_log
+                        Creates formatted excel for cleaning log
+detect_variable         detects variables names in code
+recreate_parent_column
+                        This function recreates the columns for select
+                        multiple questions
+review_cleaning         Review cleaning
+review_cleaning_log     Review cleaning log
+review_others           Review discrepancy between kobo relevancies and
+                        the dataset.
+review_sample_frame_with_dataset
+                        Compares the sample frame with the clean data
+verify_valid_choices    Verify if the Kobo choices dataframe is valid
+verify_valid_survey     Verify if the Kobo survey dataframe is valid

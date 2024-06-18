@@ -1,0 +1,29 @@
+add_fclcm_phase         Calculating FEWSNET Food Consumption-Livelihood
+                        Coping Matrix
+add_fcm_phase           Add the food consumption matrix to the dataset
+add_fcs                 add_fcs
+add_hhs                 Add the household hunger scale to the dataset
+add_lcsi                Add LCSI
+add_rcsi                Add indicator for reduced Household CSI
+                        Score(rcsi)
+addindicators_MSNA_template_data
+                        MSNA template dataset (example)
+addindicators_analysis_by_group
+                        Analysis by population group
+addindicators_choices   Choices tab of kobo tool
+addindicators_clean_data
+                        Clean data
+addindicators_cleaning_log
+                        Cleaning log
+addindicators_food_consumption_df
+                        Dataset with food consumption, household hunger
+                        Score component
+addindicators_overall_analysis
+                        Nation/all population level analysis.
+addindicators_raw_data
+                        Raw data
+addindicators_survey    Survey tab of kobo tool
+review_one_variable     Review 1 column comparing it to another one and
+                        spots differences
+review_variables        Review columns comparing it to another set of
+                        columns and spots differences

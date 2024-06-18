@@ -1,0 +1,49 @@
+Package: cleaningtools
+Title: cleaningtools package focuses on data cleaning
+Version: 0.0.0.9003
+Authors@R: c(
+    person("Mehedi", "Khan", , "mh.khan@reach-initiative.org", role = "aut",
+           comment = c(ORCID = "0000-0002-4276-4485")),
+    person("Yann", "Say", , "yann.say@impact-initiatives.org", role = c("cre", "aut"),
+           comment = c(ORCID = "0000-0002-7390-4209")),
+    person("Edouard", "Legoupil", , "legoupil@nhcr.org", role = "ctb")
+  )
+Description: The cleaningtools package focuses on cleaning, and has three
+    components: **Check**, which includes a set of functions that flag
+    values, such as check_outliers and check_logical.  **Create**, which
+    includes a set of functions to create different items for use in
+    cleaning, such as the cleaning log from the checks, clean data, and
+    enumerator performance.  **Review**, which includes a set of functions
+    to review the cleaning.
+License: MIT + file LICENSE
+URL: https://impact-initiatives.github.io/cleaningtools/
+Depends: R (>= 3.5.0)
+Imports: assertthat, cluster, data.table, dplyr, fs, glue, here, httr,
+        magrittr, openxlsx, purrr, randomcoloR, rlang, snakecase,
+        stats, stringi, stringr, tibble, tidyr, tidyselect, utils
+Suggests: knitr, riddle, rmarkdown, testthat (>= 3.0.0), tidyverse
+VignetteBuilder: knitr
+Remotes: edouard-legoupil/riddle
+Config/fusen/version: 0.5.2
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+RemoteType: github
+RemoteHost: api.github.com
+RemoteRepo: cleaningtools
+RemoteUsername: impact-initiatives
+RemoteRef: HEAD
+RemoteSha: 8fbce5e66a0c5d79e4251429273f869688640f3a
+GithubRepo: cleaningtools
+GithubUsername: impact-initiatives
+GithubRef: HEAD
+GithubSHA1: 8fbce5e66a0c5d79e4251429273f869688640f3a
+NeedsCompilation: no
+Packaged: 2024-05-14 07:00:15 UTC; Yann SAY
+Author: Mehedi Khan [aut] (<https://orcid.org/0000-0002-4276-4485>),
+  Yann Say [cre, aut] (<https://orcid.org/0000-0002-7390-4209>),
+  Edouard Legoupil [ctb]
+Maintainer: Yann Say <yann.say@impact-initiatives.org>
+Built: R 4.4.0; ; 2024-05-14 07:00:19 UTC; windows

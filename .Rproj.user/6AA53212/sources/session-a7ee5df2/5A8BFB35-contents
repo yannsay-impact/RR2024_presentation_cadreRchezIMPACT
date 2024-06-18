@@ -1,0 +1,356 @@
+---
+title: "Cadre R chez IMPACT Initiatives"
+subtitle: "xxx"
+date: 12/06/2024
+date-format: "DD/MM/YYYY"
+execute:
+  echo: true
+  message: false
+  output: false
+  cache: true
+
+format: 
+  revealjs:
+    logo: scss/IMPACT_Family_Logo_TransparentBackground.png
+    theme: scss/impact_theme.scss
+
+title-slide-attributes:
+    data-background-image: scss/01titlenologo.png
+
+---
+
+# Contents {background-image="scss/02contents.png"}
+
+::: columns
+::: {.column width="60%"}
+:::
+
+::: {.column width="40%"}
+1.  [Raisons]
+2.  [Cadre R]
+3.  \[En pratique\]
+:::
+:::
+
+# Raisons {.section background-image="scss/03section.png"}
+
+## {.page background-image="scss/04page.png"}
+
+::: {.incremental}
+-   Beaucoup d'équipes et de projets (~ 30 pays)
+-   Scripts de nettoyage et d'analyse personalisés (80% et 50% des personnes utilisent des scripts perso)
+:::
+
+# Cadre R {.section background-image="scss/03section.png"}
+
+## Cadre R {.page background-image="scss/04page.png"}
+
+Cadre d'analyse modulaire à 2 dimensions: 
+
+- une dimension horizontale qui se concentre sur le résultat d’une étape, et
+- une dimension verticale qui se concentre sur le contenu d’une étape 
+
+![Cadre R chez IMPACT](images/presentation/cadre-complet.png)
+
+
+## 4 étapes
+
+![](images/presentation/4-étapes.png){width=200}
+
+
+---
+::: {.incremental}
+
+- **Nettoyage** : Toute manipulation pour passer des données brutes aux données propres 
+- **Composition** : Toute manipulation avant l'analyse, par ex. ajout d'indicateurs, combiner deux bases de données (avant et après une distribution). Les indicateurs sont créés avant l'analyse, et non avec l'analyse. 
+- **Analyse** : Toute manipulation concernant uniquement l'analyse. L'analyse s'arrête à la table des résultats. La table de résultat est format long : statistique + clé d'analyse.
+- **Présentation** : Toute manipulation pour formater la table des résultats.  
+
+:::
+
+## 4 verbes
+
+  - Vérifier (check_\*): Une fonction qui va signaler certaines valeurs (par exemple, valeurs autres à recoder, valeurs aberrantes, etc.). Ces valeurs sont cataloguées dans un journal. Un check_* renverra une liste : le jeu de données vérifié et le journal de nettoyage. 
+
+  - Ajouter (add_*): Une fonction qui ajoute une variable (colonne) au jeu de données. Par exemple, pour ajouter la durée d’une enquête, pour ajouter la catégorie de score de consommation alimentaire, etc. 
+
+  - Créer (create_*): Une fonction qui créé, transforme quelque chose, par exemple créer un journal de nettoyage avec des actions à faire, créer une table de résultats d’analyse, créer un produit pour une présentation. 
+
+  - Revoir (review_*): Une fonction qui examinera un objet en le comparant à des normes ou à un autre objet et signalera les différences, par exemple en examinant le nettoyage en comparant le jeu de données brut, le jeu de données propre et le journal de nettoyage, l’analyse le comparant à une autre analyse. 
+  
+## 2 adjectifs
+
+  - « pipeable » : Chaque étape, chaque famille de fonctions (verbes) peuvent être utilisée une après l’autre. Cela permet à l’utilisateur.ice de pouvoir adapter chaque étape avec les fonctions spécifiques à son contexte. 
+
+  - Indépendant : A chaque étape, le cadre définit l’entrée et la sortie, le "comment"  est libre, chaque utilisateur.ice peut donc choisir l’outil qu’il/elle préfère.  
+
+## 4 packages {.page background-image="scss/04page.png"}
+
+{cleaningtools}
+{addindicators}
+{analysistools}
+{presentresults}
+
+# Nettoyage {.section background-image="scss/03section.png"}
+
+## Vérifications {.page background-image="scss/04page.png"}
+
+```{r}
+library(cleaningtools)
+library(dplyr)
+
+my_raw_dataset <- cleaningtools::cleaningtools_raw_data
+my_kobo_survey <- cleaningtools::cleaningtools_survey
+my_kobo_choice <- cleaningtools::cleaningtools_choices
+
+my_log1 <- my_raw_dataset %>% 
+  check_outliers(uuid_column = "X_uuid")
+```
+
+```{r}
+#| output: true
+#| output-location: column-fragment
+typeof(my_log1)
+```
+
+<br/>
+
+```{r}
+#| output: true
+#| output-location: column-fragment
+my_log1 %>% 
+  names()
+```
+
+------------------------------------------------------------------------
+
+```{r}
+#| output: true
+#| output-location: fragment
+
+my_log1$potential_outliers %>% 
+  head()
+```
+
+------------------------------------------------------------------------
+
+```{r}
+my_log2 <- my_raw_dataset %>% 
+  check_outliers(uuid_column = "X_uuid") %>% 
+  check_duplicate(uuid_column = "X_uuid")
+```
+
+<br/>
+
+```{r}
+#| output: true
+#| output-location: column-fragment
+names(my_log2)
+```
+
+------------------------------------------------------------------------
+
+```{r}
+#| output: true
+#| output-location: fragment
+my_log2$potential_outliers %>% 
+  head()
+```
+
+------------------------------------------------------------------------
+
+```{r}
+#| output: true
+#| output-location: fragment
+
+my_log2$duplicate_log %>% 
+  head()
+```
+
+## Vérifications
+
+-   check_outliers
+-   check_duplicate
+-   check_soft_duplicates
+-   check_value
+-   checked_dataset
+-   check_others
+-   check_logical_with_list
+
+## Journal de nettoyage
+
+```{r}
+#| echo: false
+more_logs <- my_raw_dataset %>% 
+  check_duplicate(uuid_column = "X_uuid") %>% 
+  check_soft_duplicates(uuid_column = "X_uuid", kobo_survey = my_kobo_survey, sm_separator = ".") %>%
+  check_outliers(uuid_column = "X_uuid") %>%
+  check_value(uuid_column = "X_uuid") 
+more_logs$checked_dataset <- more_logs$checked_dataset %>% 
+  add_duration(uuid_column = "X_uuid", start_column = "X.U.FEFF.start", end_column = "end")
+more_logs <- more_logs %>% 
+  check_duration(column_to_check = "duration", uuid_column = "X_uuid")
+other_columns_to_check <- my_kobo_survey %>% 
+  filter(type == "text") %>% 
+  filter(name %in% names(my_raw_dataset)) %>%
+  pull(name) 
+```
+
+```{r}
+#| output: true
+#| output-location: fragment
+names(more_logs)
+
+```
+
+<br/>
+
+```{r}
+#| output: true
+#| output-location: fragment
+my_combined_log <- create_combined_log(more_logs)
+names(more_logs)
+
+```
+<br/>
+```{r}
+#| output: true
+#| output-location: fragment
+
+my_combined_log$cleaning_log %>% 
+  head()
+```
+
+---
+
+```{r}
+#| eval: false
+create_xlsx_cleaning_log(my_combined_log,
+                         kobo_survey = my_kobo_survey,
+                         kobo_choices = my_kobo_choice,
+                         use_dropdown = T,
+                         sm_dropdown_type = "logical",
+                         output_path =  "outputs/02 - example - cleaning-log-with-kobo.xlsx")
+```
+
+<br/>
+
+::: {.columns}
+
+::: {.column}
+![Journal de nettoyage et modifications](images/presentation/cleaninglog-change-type.png)
+
+:::
+
+::: {.column}
+![Journal de nettoyage et choix unique](images/presentation/cleaninglog-new-valuepng.png)
+
+:::
+
+:::
+
+## Dataset propre
+
+```{r}
+#| eval: false
+my_filled_log <- readxl::read_excel("my_filled_log.xlsx", sheet = 2)
+my_clean_data <- create_clean_data(raw_dataset = my_raw_dataset,
+                                   raw_data_uuid_column = "X_uuid",
+                                   cleaning_log = my_filled_log, 
+                                   cleaning_log_uuid_column = "uuid",
+                                   cleaning_log_question_column = "question",
+                                   cleaning_log_new_value_column = "new_value",
+                                   cleaning_log_change_type_column = "change_type")
+```
+
+```{r}
+#| eval: false
+my_deletion_log <- my_clean_data2$cleaning_log %>% 
+  filter(change_type == "remove_survey")
+
+my_filled_log_no_deletion <- my_clean_data2$cleaning_log %>% 
+  filter(change_type != "remove_survey") %>% 
+  filter(!uuid %in% my_deletion_log$uuid)
+
+review_of_cleaning <- review_cleaning(raw_dataset = my_raw_dataset,
+                    raw_dataset_uuid_column = "X_uuid", 
+                    clean_dataset = my_clean_data2$data_with_fix_concat,
+                    clean_dataset_uuid_column = "X_uuid",
+                    cleaning_log = my_filled_log_no_deletion, 
+                    cleaning_log_uuid_column = "uuid",
+                    cleaning_log_question_column = "question",
+                    cleaning_log_new_value_column = "new_value",
+                    cleaning_log_change_type_column = "change_type", 
+                    cleaning_log_old_value_column = "old_value", 
+                    deletion_log = my_deletion_log, 
+                    deletion_log_uuid_column = "uuid"
+                    )
+```
+
+
+## Composition {.page background-image="scss/04page.png"}
+
+```{r}
+library(addindicators)
+library(dplyr)
+
+my_data <- addindicators::addindicators_MSNA_template_data
+```
+
+```{r}
+my_data_with_indicators <- my_data %>%
+  add_fcs(
+  cutoffs = "normal",
+  fsl_fcs_cereal = "fs_fcs_cereals_grains_roots_tubers",
+  fsl_fcs_legumes = "fs_fcs_beans_nuts",
+  fsl_fcs_veg = "fs_fcs_vegetables_leaves",
+  fsl_fcs_fruit = "fs_fcs_fruit",
+  fsl_fcs_meat = "fs_fcs_meat_fish_eggs",
+  fsl_fcs_dairy = "fs_fcs_dairy",
+  fsl_fcs_sugar = "fs_fcs_sugar",
+  fsl_fcs_oil = "fs_fcs_oil_fat_butter"
+  ) %>%
+  add_hhs(
+  )
+
+my_data_with_indicators[, tail(names(my_data_with_indicators), 14)] %>%
+  head()
+```
+
+
+## Analyse {.page background-image="scss/04page.png"}
+```{r}
+library(analysistools)
+library(dplyr)
+only_nas <- my_data_with_indicators %>%
+  summarise(across(.cols = everything(), .fns = function(x) {
+    sum(is.na(x)) == nrow(my_data_with_indicators)
+  })) %>%
+  do.call(c, .)
+
+my_data_shorter <- my_data_with_indicators[, !only_nas] %>%
+  select(!grep("other", names(my_data_with_indicators), value = T))
+my_design <- srvyr::as_survey_design(my_data_shorter, strata = "admin1")
+
+my_analysis <- create_analysis(my_design, sm_separator = "/")
+my_analysis %>%
+  names()
+
+my_analysis$results_table %>%
+  head()
+
+my_analysis$loa %>%
+  head()
+```
+
+## Produits {.page background-image="scss/04page.png"}
+```{r}
+library(presentresults)
+my_analysis$results_table %>% 
+  create_table_group_x_variable() %>% 
+  create_xlsx_group_x_variable(file_path = "outputs/04 - example - group_x_variable.xlsx", overwrite = T)
+```
+
+## Merci {.center .end background-image="scss/02contents.png"}
+
+yann.say\@impact-initiatives.org

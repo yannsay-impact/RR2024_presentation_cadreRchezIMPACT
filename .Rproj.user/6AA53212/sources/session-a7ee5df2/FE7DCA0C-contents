@@ -1,0 +1,416 @@
+---
+title: "Cadre R chez IMPACT Initiatives"
+author: "Yann Say"
+date: 12/06/2024
+date-format: "DD/MM/YYYY"
+execute:
+  echo: true
+  message: false
+  output: false
+
+format: 
+  revealjs:
+    logo: scss/IMPACT_Family_Logo_TransparentBackground.png
+    theme: scss/impact_theme.scss
+
+title-slide-attributes:
+    data-background-image: scss/01titlenologo.png
+    
+embed-resources: true
+---
+
+# Contents {background-image="scss/02contents.png"}
+
+::: columns
+::: {.column width="60%"}
+:::
+
+::: {.column width="40%"}
+1.  Raisons
+2.  Cadre R
+3.  En pratique
+:::
+:::
+
+# Raisons {.section background-image="scss/03section.png"}
+
+## Raisons {.page background-image="scss/04page.png"}
+
+-   **~ 30 pays**: Beaucoup d'équipes et de projets
+-   **80%** des scripts de nettoyage et **50%** des analyses utilisent des fonctions personnelles
+
+# Cadre R chez IMPACT {.section background-image="scss/03section.png"}
+
+## Cadre R {.page background-image="scss/04page.png"}
+
+Cadre d'analyse modulaire à 2 dimensions:
+
+-   une dimension **verticale** qui se concentre sur le **contenu** d’une étape
+-   une dimension **horizontale** qui se concentre sur le **résultat** d’une étape
+
+##  {.page background-image="scss/04page.png"}
+
+![Cadre R chez IMPACT](images/presentation/cadre-complet.png){.center}
+
+- 4 étapes
+- 4 verbes
+- 2 adjectifs
+
+
+## 4 étapes {.page background-image="scss/04page.png"}
+
+![](images/presentation/4-étapes.png){width="200"}
+
+##  {.page background-image="scss/04page.png"}
+
+-   **Nettoyage** : Toute manipulation pour passer des données brutes aux données propres
+
+::: incremental
+-   **Composition** : Toute manipulation avant l'analyse, par ex. ajout d'indicateurs, combiner deux bases de données (avant et après une distribution). Les indicateurs sont créés avant l'analyse, et non avec l'analyse.
+-   **Analyse** : Toute manipulation concernant uniquement l'analyse. L'analyse s'arrête à la table des résultats. La table de résultat est format long : statistique + clé d'analyse.
+-   **Présentation** : Toute manipulation pour formater la table des résultats.\
+:::
+
+## 4 verbes {.page background-image="scss/04page.png"}
+
+![](images/presentation/4-verbes.png){width="200"}
+
+##  {.page background-image="scss/04page.png"}
+
+-   **Ajouter (add\_\*)**: Une fonction qui ajoute une variable (colonne) au jeu de données. Par exemple, pour ajouter la durée d’une enquête, pour ajouter la catégorie de score de consommation alimentaire, etc.
+
+::: fragment
+-   **Vérifier (check\_\*)**: Une fonction qui va signaler certaines valeurs (par exemple, valeurs autres à recoder, valeurs aberrantes, etc.). Un check\_\* renverra une liste : le jeu de données vérifié et le journal de nettoyage.
+:::
+
+##  {.page background-image="scss/04page.png"}
+
+-   **Créer (create\_\*)**: Une fonction qui créé, transforme quelque chose, par exemple créer un journal de nettoyage avec des actions à faire, créer une table de résultats d’analyse, créer un produit pour une présentation.
+
+::: fragment
+-   **Revoir (review\_\*)**: Une fonction qui examinera un objet en le comparant à des standards ou à un autre objet et signalera les différences, par exemple en examinant le nettoyage en comparant le jeu de données brut, le jeu de données propre et le journal de nettoyage, l’analyse le comparant à une autre analyse.
+:::
+
+## 2 adjectifs {.page background-image="scss/04page.png"}
+
+![](images/presentation/cadre-complet.png)
+
+##  {.page background-image="scss/04page.png"}
+
+-   **« pipeable »** : Chaque étape, chaque famille de fonctions (verbes) peuvent être utilisée une après l’autre. Cela permet à l’utilisateur.ice de pouvoir adapter chaque étape avec les fonctions spécifiques à son contexte.
+
+::: fragment
+-   **Indépendant** : A chaque étape, le cadre définit l’entrée et la sortie, le "comment" est libre, chaque utilisateur.ice peut donc choisir l’outil qu’il/elle préfère.\
+:::
+
+## 4 packages {.page background-image="scss/04page.png"}
+
+-   `cleaningtools`
+-   `addindicators`
+-   `analysistools`
+-   `presentresults`
+
+<br/> https://github.com/impact-initiatives/
+
+# Nettoyage {.section background-image="scss/03section.png"}
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| echo: false
+library(cleaningtools)
+library(dplyr)
+
+my_raw_dataset <- cleaningtools::cleaningtools_raw_data
+my_kobo_survey <- cleaningtools::cleaningtools_survey
+my_kobo_choice <- cleaningtools::cleaningtools_choices
+```
+
+### check\_
+
+::: fragment
+```{r}
+my_log1 <- my_raw_dataset %>% 
+  check_outliers(uuid_column = "X_uuid")
+```
+:::
+
+<br/>
+
+::: fragment
+```{r}
+#| output: true
+#| output-location: column-fragment
+typeof(my_log1)
+```
+:::
+
+<br/>
+
+::: fragment
+```{r}
+#| output: true
+#| output-location: column-fragment
+my_log1 %>% 
+  names()
+```
+:::
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| output: true
+#| output-location: fragment
+
+my_log1$potential_outliers %>% 
+  head()
+```
+
+##  {.page background-image="scss/04page.png"}
+
+### pipe-able
+
+```{r}
+more_logs <- my_raw_dataset %>% 
+  check_duplicate(uuid_column = "X_uuid") %>% 
+  check_soft_duplicates(uuid_column = "X_uuid", kobo_survey = my_kobo_survey, sm_separator = ".") %>%
+  check_outliers(uuid_column = "X_uuid") %>%
+  check_value(uuid_column = "X_uuid") 
+
+```
+
+<br/>
+
+::: fragment
+```{r}
+#| output: true
+#| output-location: column-fragment
+names(more_logs)
+```
+:::
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| output: true
+#| output-location: fragment
+more_logs$potential_outliers %>% 
+  head()
+```
+
+::: fragment
+```{r}
+#| output: true
+#| output-location: fragment
+
+more_logs$duplicate_log %>% 
+  head()
+```
+:::
+
+##  {.page background-image="scss/04page.png"}
+
+### create
+
+```{r}
+#| output: true
+#| output-location: fragment
+my_combined_log <- create_combined_log(more_logs)
+
+```
+
+<br/>
+
+::: fragment
+```{r}
+#| output: true
+names(my_combined_log)
+
+```
+:::
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| output: true
+#| output-location: fragment
+
+my_combined_log$cleaning_log %>% 
+  head()
+```
+
+<br/>
+
+::: fragment
+```{r}
+#| eval: false
+create_xlsx_cleaning_log(my_combined_log,
+                         kobo_survey = my_kobo_survey,
+                         kobo_choices = my_kobo_choice,
+                         use_dropdown = T,
+                         sm_dropdown_type = "logical",
+                         output_path =  "outputs/02 - example - cleaning-log-with-kobo.xlsx")
+```
+:::
+
+::: fragment
+::: {layout-ncol="2"}
+![](images/presentation/cleaninglog-change-type.png)
+
+![](images/presentation/cleaninglog-new-valuepng.png)
+:::
+:::
+
+##  {.page background-image="scss/04page.png"}
+
+### create
+
+```{r}
+#| eval: false
+my_filled_log <- readxl::read_excel("my_filled_log.xlsx", sheet = 2)
+
+my_clean_data <- create_clean_data(raw_dataset = my_raw_dataset,
+                                   raw_data_uuid_column = "X_uuid",
+                                   cleaning_log = my_filled_log, 
+                                   cleaning_log_uuid_column = "uuid",
+                                   cleaning_log_question_column = "question",
+                                   cleaning_log_new_value_column = "new_value",
+                                   cleaning_log_change_type_column = "change_type")
+```
+
+##  {.page background-image="scss/04page.png"}
+
+### review
+
+```{r}
+#| eval: false
+#| echo: false
+my_deletion_log <- my_clean_data2$cleaning_log %>% 
+  filter(change_type == "remove_survey")
+
+my_filled_log_no_deletion <- my_clean_data2$cleaning_log %>% 
+  filter(change_type != "remove_survey") %>% 
+  filter(!uuid %in% my_deletion_log$uuid)
+```
+
+```{r}
+#| eval: false
+review_of_cleaning <- review_cleaning(raw_dataset = my_raw_dataset,
+                    raw_dataset_uuid_column = "X_uuid", 
+                    clean_dataset = my_clean_data2$data_with_fix_concat,
+                    clean_dataset_uuid_column = "X_uuid",
+                    cleaning_log = my_filled_log_no_deletion, 
+                    cleaning_log_uuid_column = "uuid",
+                    cleaning_log_question_column = "question",
+                    cleaning_log_new_value_column = "new_value",
+                    cleaning_log_change_type_column = "change_type", 
+                    cleaning_log_old_value_column = "old_value", 
+                    deletion_log = my_deletion_log, 
+                    deletion_log_uuid_column = "uuid"
+                    )
+```
+
+# Composition {.section background-image="scss/03section.png"}
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| echo: false
+library(addindicators)
+library(dplyr)
+
+my_data <- addindicators::addindicators_MSNA_template_data
+```
+
+### add
+
+```{r}
+#| output: true
+#| output-location: fragment
+my_data_with_indicators <- my_data %>%
+  add_fcs(
+  cutoffs = "normal",
+  fsl_fcs_cereal = "fs_fcs_cereals_grains_roots_tubers",
+  fsl_fcs_legumes = "fs_fcs_beans_nuts",
+  fsl_fcs_veg = "fs_fcs_vegetables_leaves",
+  fsl_fcs_fruit = "fs_fcs_fruit",
+  fsl_fcs_meat = "fs_fcs_meat_fish_eggs",
+  fsl_fcs_dairy = "fs_fcs_dairy",
+  fsl_fcs_sugar = "fs_fcs_sugar",
+  fsl_fcs_oil = "fs_fcs_oil_fat_butter"
+  ) %>%
+  add_hhs(
+  )
+
+my_data_with_indicators[, tail(names(my_data_with_indicators), 14)] %>%
+  head()
+```
+
+# Analyse {.section background-image="scss/03section.png"}
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| echo: false
+my_analysis <-list()
+my_analysis$results_table<- presentresults::presentresults_resultstable
+```
+
+### create
+
+```{r}
+#| eval: false
+my_design <- srvyr::as_survey_design(my_data_with_indicators, strata = "admin1")
+
+my_analysis <- create_analysis(my_design, sm_separator = "/")
+```
+
+::: fragment
+Entrée pour `create_analysis` est un object `survey_design` de `survey`/`srvyr`
+:::
+
+::: fragment
+```{r}
+#| output: true
+#| output-location: fragment
+my_analysis$results_table %>%
+  select(stat, analysis_key) %>%
+  head()
+
+```
+:::
+
+# Produits {.page background-image="scss/04page.png"}
+
+##  {.page background-image="scss/04page.png"}
+
+### create
+
+```{r}
+#| eval: false
+library(presentresults)
+my_analysis$results_table %>% 
+  create_table_group_x_variable() %>% 
+  create_xlsx_group_x_variable(file_path = "outputs/04 - example - group_x_variable.xlsx", overwrite = T)
+```
+
+![](images/presentation/table%20group%20x%20variables.png)
+
+##  {.page background-image="scss/04page.png"}
+
+```{r}
+#| eval: false
+my_results_table %>% 
+  create_table_variable_x_group() %>%
+  create_xlsx_variable_x_group(file_path = "outputs/05 - example - variable_x_group.xlsx", overwrite = T)
+```
+
+![](images/presentation/table%20variables%20x%20group.png)
+
+## Merci {.center .end background-image="scss/02contents.png"}
+
+<br/> 
+yann.say@impact-initiatives.org 
+<br/> 
+<br/> 
+www.impact-initiatives.org
